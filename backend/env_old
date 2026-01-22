@@ -1,0 +1,2 @@
+DATABASE_URL=postgresql://usuario:postgres@localhost:5432/sistemabillar
+SECRET_KEY=TaCaEmMi0929
