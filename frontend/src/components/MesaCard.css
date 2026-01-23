@@ -1,0 +1,127 @@
+/* MesaCard.css */
+.mesa-card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 15px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: transform 0.2s;
+}
+
+.mesa-card-container:hover {
+  transform: translateY(-5px);
+}
+
+.mesa-table {
+  position: relative;
+  width: 220px;
+  height: 120px;
+  background: #3e2723; /* Dark Wood Base */
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 2px 5px rgba(255,255,255,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+/* Wood Rail Gradient */
+.mesa-table::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #5d4037 0%, #3e2723 100%);
+  z-index: 1;
+}
+
+/* The Felt (Playing Surface) */
+.mesa-surface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #2e7d32; /* Classic Green */
+  background-image: radial-gradient(circle at center, #43a047 0%, #2e7d32 80%);
+  border-radius: 4px;
+  z-index: 2;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+/* Variation for Pool vs others if needed */
+.mesa-surface.variant-blue {
+    background-color: #1565c0;
+    background-image: radial-gradient(circle at center, #1e88e5 0%, #1565c0 80%);
+}
+
+.mesa-surface.variant-red {
+    background-color: #c62828;
+    background-image: radial-gradient(circle at center, #e53935 0%, #c62828 80%);
+}
+
+/* Pockets */
+.pocket {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  z-index: 3;
+  box-shadow: inset 1px 1px 3px rgba(255,255,255,0.1);
+}
+
+.p-tl { top: 6px; left: 6px; }
+.p-tm { top: 4px; left: 50%; transform: translateX(-50%); }
+.p-tr { top: 6px; right: 6px; }
+.p-bl { bottom: 6px; left: 6px; }
+.p-bm { bottom: 4px; left: 50%; transform: translateX(-50%); }
+.p-br { bottom: 6px; right: 6px; }
+
+/* Status "Hole" or Indicator */
+.mesa-info {
+  z-index: 4;
+  text-align: center;
+  color: white;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+.mesa-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  background: rgba(0,0,0,0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.mesa-status-badge {
+    margin-top: 6px;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Status Colors */
+.status-available { background-color: #4CAF50; color: white; }
+.status-occupied { background-color: #F44336; color: white; animation: pulse 2s infinite; }
+.status-reserved { background-color: #FFC107; color: black; }
+.status-out { background-color: #9E9E9E; color: white; }
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+}
+
+.mesa-footer {
+    margin-top: 10px;
+    text-align: center;
+}

@@ -1,28 +1,46 @@
 import React from 'react';
+import './MesaCard.css';
 
 const statusConfig = {
-  AVAILABLE: { label: 'Disponible', color: '#4CAF50' },
-  OCCUPIED: { label: 'Ocupada', color: '#F44336' },
-  RESERVED: { label: 'Reservada', color: '#FF9800' },
-  OUT_OF_SERVICE: { label: 'Fuera de servicio', color: '#9E9E9E' },
+  AVAILABLE: { label: 'Disponible', className: 'status-available' },
+  OCCUPIED: { label: 'Ocupada', className: 'status-occupied' },
+  RESERVED: { label: 'Reservada', className: 'status-reserved' },
+  OUT_OF_SERVICE: { label: 'Fuera de Servicio', className: 'status-out' },
 };
 
 function MesaCard({ mesa }) {
-  // Fallback if status is unknown
-  const config = statusConfig[mesa.status] || { label: mesa.status, color: '#CCCCCC' };
+  const config = statusConfig[mesa.status] || { label: mesa.status, className: 'status-out' };
+
+  // Determine felt color
+  let surfaceClass = 'mesa-surface';
+  if (mesa.type === 'CARDS') surfaceClass += ' variant-red'; // Example: Cards tables red
+  else if (mesa.type === 'SNOOKER') surfaceClass += ' variant-blue';
 
   return (
-    <div style={{
-      border: `2px solid ${config.color}`,
-      borderRadius: '8px',
-      padding: '16px',
-      width: '150px',
-      textAlign: 'center',
-      backgroundColor: '#f9f9f9',
-    }}>
-      <h3>{mesa.name}</h3> {/* Backend uses 'name', not 'nombre' */}
-      <p style={{ color: config.color, fontWeight: 'bold' }}>{config.label}</p>
-      {mesa.type && <small style={{ color: '#666' }}>{mesa.type}</small>}
+    <div className="mesa-card-container">
+      <div className="mesa-table">
+        {/* Pockets */}
+        <div className="pocket p-tl"></div>
+        <div className="pocket p-tm"></div>
+        <div className="pocket p-tr"></div>
+        <div className="pocket p-bl"></div>
+        <div className="pocket p-bm"></div>
+        <div className="pocket p-br"></div>
+
+        {/* Felt Surface */}
+        <div className={surfaceClass}>
+          <div className="mesa-info">
+            <div className="mesa-name">{mesa.name}</div>
+            <div className={`mesa-status-badge ${config.className}`}>
+              {config.label}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mesa-footer">
+        <small style={{ color: '#888' }}>{mesa.type || 'POOL'}</small>
+      </div>
     </div>
   );
 }
