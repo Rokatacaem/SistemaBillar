@@ -1,26 +1,28 @@
 import React from 'react';
 
-const coloresEstado = {
-  Disponible: '#4CAF50',
-  Ocupada: '#F44336',
-  Reservada: '#FF9800',
-  'Fuera de servicio': '#9E9E9E',
+const statusConfig = {
+  AVAILABLE: { label: 'Disponible', color: '#4CAF50' },
+  OCCUPIED: { label: 'Ocupada', color: '#F44336' },
+  RESERVED: { label: 'Reservada', color: '#FF9800' },
+  OUT_OF_SERVICE: { label: 'Fuera de servicio', color: '#9E9E9E' },
 };
 
 function MesaCard({ mesa }) {
-  const color = coloresEstado[mesa.estado] || '#CCCCCC';
+  // Fallback if status is unknown
+  const config = statusConfig[mesa.status] || { label: mesa.status, color: '#CCCCCC' };
 
   return (
     <div style={{
-      border: `2px solid ${color}`,
+      border: `2px solid ${config.color}`,
       borderRadius: '8px',
       padding: '16px',
       width: '150px',
       textAlign: 'center',
       backgroundColor: '#f9f9f9',
     }}>
-      <h3>{mesa.nombre}</h3>
-      <p style={{ color }}>{mesa.estado}</p>
+      <h3>{mesa.name}</h3> {/* Backend uses 'name', not 'nombre' */}
+      <p style={{ color: config.color, fontWeight: 'bold' }}>{config.label}</p>
+      {mesa.type && <small style={{ color: '#666' }}>{mesa.type}</small>}
     </div>
   );
 }

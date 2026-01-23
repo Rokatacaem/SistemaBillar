@@ -1,37 +1,48 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
+import models, schemas, crud
+from database import SessionLocal, engine
 
-# Cargar variables de entorno desde el archivo .env
-load_dotenv()
+# Create tables
+models.Base.metadata.create_all(bind=engine)
 
-# Imprimir la URL de conexión para depuración
-print("DATABASE_URL:", os.getenv("DATABASE_URL"))
-
-# Obtener la URL de conexión a la base de datos
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-# Verificar que la variable esté definida
-if not DATABASE_URL:
-    raise ValueError("La variable DATABASE_URL no está definida en el archivo .env")
-
-# Crear el motor de conexión con SQLAlchemy
-engine = create_engine(DATABASE_URL)
-
-# Crear la aplicación FastAPI
 app = FastAPI()
 
-# Endpoint raíz para verificar la conexión a PostgreSQL
-@app.get("/")
-def verificar_conexion():
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for dev
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Dependency
+def get_db():
+    db = SessionLocal()
     try:
-        with engine.connect() as connection:
-            result = connection.execute("SELECT 1")
-            return {"estado": "Conexión exitosa", "resultado": [row[0] for row in result]}
-    except SQLAlchemyError as e:
-        return {"estado": "Error de conexión", "detalle": str(e)}
+        yield db
+    finally:
+        db.close()
+
+@app.get("/")
+def read_root():
+    return {"message": "Sistema Billar API Running"}
+
+@app.post("/tables/", response_model=schemas.Table)
+def create_table(table: schemas.TableCreate, db: Session = Depends(get_db)):
+    return crud.create_table(db=db, table=table)
+
+@app.get("/tables/", response_model=list[schemas.Table])
+def read_tables(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    tables = crud.get_tables(db, skip=skip, limit=limit)
+    return tables
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
